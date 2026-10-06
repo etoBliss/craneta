@@ -1,0 +1,173 @@
+// Prisma schema — Supabase PostgreSQL for shared production data
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── User ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String?
+  authVersion  Int      @default(0)
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  passportPages  PassportPage[]
+  connectedTools ConnectedTool[]
+  stampEvents    StampEvent[]
+  inboxItems     InboxItem[]
+  accounts       Account[]
+  sessions       Session[]
+
+  @@map("users")
+}
+
+// ─── NextAuth adapter tables ──────────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── PassportPage ─────────────────────────────────────────────────────────────
+
+model PassportPage {
+  id        String   @id @default(cuid())
+  userId    String
+  category  String
+  title     String
+  fields    String   // JSON stringified array of field objects
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions PassportPageVersion[]
+
+  @@index([userId, isActive])
+  @@map("passport_pages")
+}
+
+// ─── PassportPageVersion ──────────────────────────────────────────────────────
+
+model PassportPageVersion {
+  id       String   @id @default(cuid())
+  pageId   String
+  version  Int
+  title    String
+  fields   String   // JSON stringified array of field objects
+  savedAt  DateTime @default(now())
+  editNote String?
+
+  page PassportPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, version])
+  @@map("passport_page_versions")
+}
+
+// ─── ConnectedTool ────────────────────────────────────────────────────────────
+
+model ConnectedTool {
+  id              String   @id @default(cuid())
+  userId          String
+  toolName        String
+  toolSlug        String
+  includedPageIds String   // Comma separated page IDs or JSON array
+  includedFields  String?  // JSON string
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stampEvents StampEvent[]
+
+  @@unique([userId, toolSlug])
+  @@map("connected_tools")
+}
+
+// ─── StampEvent ───────────────────────────────────────────────────────────────
+
+model StampEvent {
+  id              String   @id @default(cuid())
+  userId          String
+  connectedToolId String
+  pageIds         String   // Comma separated page IDs or JSON array
+  exportFormat    String?
+  stampedAt       DateTime @default(now())
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connectedTool ConnectedTool @relation(fields: [connectedToolId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([connectedToolId])
+  @@map("stamp_events")
+}
+
+// ─── InboxItem ────────────────────────────────────────────────────────────────
+// A quick-capture scratchpad. The user jots something down here mid-task
+// and triages it later into a real PassportPage field.
+
+model InboxItem {
+  id        String   @id @default(cuid())
+  userId    String
+  text      String
+  status    String   @default("open") // "open" | "triaged" | "dismissed"
+  source    String   @default("quick_add") // "quick_add" | future sources
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Triage outcome — set when status = "triaged"
+  triagedPageId  String?
+  triagedFieldKey String?
+  triagedAt      DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, createdAt])
+  @@map("inbox_items")
+}

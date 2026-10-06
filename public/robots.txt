@@ -1,0 +1,10 @@
+# Craneta — robots.txt
+# https://craneta.app
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /auth/
+
+Sitemap: https://craneta.app/sitemap.xml

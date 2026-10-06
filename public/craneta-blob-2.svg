@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+  <!--
+    Craneta — Soft ink blob, deeper variant.
+    Pair with craneta-blob-1.svg for layered ambient depth.
+  -->
+  <defs>
+    <radialGradient id="blob-ink" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00171F" stop-opacity="0.12"/>
+      <stop offset="55%" stop-color="#00171F" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#00171F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path d="M 320 80
+           C 360 140, 380 220, 340 290
+           C 300 360, 200 380, 130 350
+           C 60 320, 30 230, 70 160
+           C 110 90, 220 30, 320 80 Z"
+        fill="url(#blob-ink)"/>
+</svg>

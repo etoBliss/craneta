@@ -1,0 +1,66 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Craneta">
+  <!--
+    Craneta mark — a passport page with a paper crane folded out of the
+    top-right corner. Forest Emerald primary, soft page surface, dashed
+    travel-stamp ring on the lower left.
+  -->
+  <defs>
+    <linearGradient id="cranetaMarkPage" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F1F7F3"/>
+    </linearGradient>
+    <linearGradient id="cranetaMarkCrane" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0E5E3B"/>
+      <stop offset="100%" stop-color="#094A2F"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Passport page (rounded) -->
+  <rect x="6" y="14" width="42" height="44" rx="5" ry="5"
+        fill="url(#cranetaMarkPage)"
+        stroke="#0E5E3B"
+        stroke-width="2.4"/>
+
+  <!-- Inner edge highlight -->
+  <rect x="9.5" y="17.5" width="35" height="37" rx="3" ry="3"
+        fill="none"
+        stroke="#0E5E3B"
+        stroke-width="0.8"
+        opacity="0.18"/>
+
+  <!-- Two content lines above the stamp -->
+  <rect x="11" y="22" width="20" height="2" rx="1" fill="#0E5E3B" opacity="0.55"/>
+  <rect x="11" y="27" width="14" height="2" rx="1" fill="#0E5E3B" opacity="0.30"/>
+
+  <!-- Travel-stamp ring (lower left) -->
+  <g transform="translate(15 44)">
+    <circle r="9.2" fill="none" stroke="#0E5E3B" stroke-width="1.6"/>
+    <circle r="9.2" fill="none" stroke="#0E5E3B" stroke-width="1.6"
+            stroke-dasharray="1.5 2.4" opacity="0.55"/>
+    <circle r="2.6" fill="#0E5E3B"/>
+  </g>
+
+  <!-- Paper crane emerging from the top-right corner of the page -->
+  <g transform="translate(28 6)">
+    <!-- Crane body/wing (origami silhouette) -->
+    <path d="
+      M 0 22
+      L 14 8
+      L 28 14
+      L 24 22
+      L 30 22
+      L 22 30
+      L 14 26
+      L 6 32
+      L 0 22
+      Z"
+      fill="url(#cranetaMarkCrane)"/>
+
+    <!-- Crane head triangle -->
+    <path d="M 14 8 L 18 0 L 22 6 Z" fill="#0E5E3B"/>
+
+    <!-- Wing crease highlight -->
+    <path d="M 14 8 L 18 22" stroke="#FFFFFF" stroke-width="0.9"
+          stroke-linecap="round" opacity="0.55"/>
+  </g>
+</svg>

@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Craneta
 
-## Getting Started
+Craneta is a private, portable profile for the context you want AI tools to know. The frontend, API routes, authentication, and Prisma database access live together in one Next.js app. Supabase hosts the PostgreSQL database.
 
-First, run the development server:
+## Local setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Requirements: Node.js 20 or later and npm.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Install dependencies with `npm ci`.
+2. Copy `.env.example` to `.env` and `.env.local`. Keep the private connection values synchronized in both files: Prisma CLI reads `.env`, while Next.js uses `.env.local`.
+3. In Supabase, open **Connect → ORM → Prisma** and copy the Session pooler URI (port 5432) into both `DATABASE_URL` and `DIRECT_URL`. Use the exact URI Supabase provides. URL-encode reserved characters in the database password.
+4. Set a unique `NEXTAUTH_SECRET`. Generate one with:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```sh
+   node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+5. Generate Prisma Client and apply the committed migrations:
 
-## Learn More
+   ```sh
+   npx prisma generate
+   npm run db:migrate
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+6. Start the app with `npm run dev` and open <http://localhost:3000>.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Never commit `.env`, `.env.local`, or a connection string. Keep database credentials server-side; do not add them to browser code or `NEXT_PUBLIC_*` variables.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Portfolio deployment
 
-## Deploy on Vercel
+Deploy this single Next.js project to a host that supports Next.js, such as Vercel. Configure `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, and `NEXTAUTH_URL` as private server environment variables. Set `NEXTAUTH_URL` to the deployed HTTPS origin. Apply committed database migrations with `npm run db:migrate` before the first deployment that uses a new database.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The existing local SQLite database at `prisma/dev.db` is preserved locally and is not automatically copied to Supabase. The Supabase database contains the schema created by the migration; local SQLite records are separate.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Login and signup throttles currently live in process memory. This is best-effort protection for the portfolio demo: counters reset when a process restarts and are not shared across instances. Add a shared rate-limit store before scaling to multiple server instances.
+
+## Database commands
+
+- `npm run db:migrate:dev`: create and apply a development migration.
+- `npm run db:migrate`: apply committed migrations.
+- `npm run db:studio`: open Prisma Studio for the configured database.
+
+Do not use `prisma db push` against a production database. Keep migration files in version control so schema changes are repeatable.
+
+## Useful commands
+
+- `npm run dev`: local development server
+- `npm run lint`: ESLint
+- `npm run build`: production build

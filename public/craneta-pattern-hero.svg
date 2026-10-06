@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="none" aria-hidden="true">
+  <!--
+    Craneta — Hero geometric pattern.
+    Strict use: only behind page hero / marketing / empty-state content,
+    never behind dense UI. Built from the three brand colors only:
+      #00171F  --ink
+      #003459  --deep-space
+      #FFFFFF  --white
+    Echoes the stamp-ring and crane-neck from the logo.
+  -->
+  <defs>
+    <pattern id="dots-deep" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#003459" fill-opacity="0.18"/>
+    </pattern>
+  </defs>
+
+  <!-- Top-right stamp ring (echo of logo signature) -->
+  <g transform="translate(360,40)">
+    <circle cx="64" cy="64" r="58" fill="none" stroke="#003459" stroke-width="3"/>
+    <circle cx="64" cy="64" r="58" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="2 8"/>
+    <circle cx="64" cy="64" r="34" fill="none" stroke="#003459" stroke-width="3"/>
+  </g>
+
+  <!-- Top-left angular triangle stack -->
+  <g transform="translate(40,30)">
+    <polygon points="0,80 80,0 80,80" fill="#00171F"/>
+    <polygon points="20,80 100,80 60,40" fill="#003459"/>
+    <polygon points="60,80 100,80 80,60" fill="#00171F" fill-opacity="0.55"/>
+  </g>
+
+  <!-- Vertical stripes band -->
+  <g transform="translate(0,200)">
+    <rect x="40"  y="0" width="10" height="180" fill="#00171F"/>
+    <rect x="60"  y="0" width="6"  height="180" fill="#003459"/>
+    <rect x="78"  y="0" width="14" height="180" fill="#00171F"/>
+    <rect x="100" y="0" width="4"  height="180" fill="#003459" fill-opacity="0.5"/>
+  </g>
+
+  <!-- Mid-right circle cluster -->
+  <g transform="translate(300,260)">
+    <circle cx="0"  cy="0"  r="40" fill="#003459"/>
+    <circle cx="60" cy="0"  r="22" fill="none" stroke="#00171F" stroke-width="3"/>
+    <circle cx="100" cy="40" r="14" fill="#00171F"/>
+  </g>
+
+  <!-- Diagonal hard-edged curve (echo of crane neck) -->
+  <g transform="translate(120,360)">
+    <path d="M 0 100 C -20 50, 40 0, 100 -20 C 140 -32, 150 -60, 130 -90"
+          stroke="#00171F" stroke-width="6" fill="none" stroke-linecap="square"/>
+    <path d="M 0 100 C -20 50, 40 0, 100 -20 C 140 -32, 150 -60, 130 -90"
+          stroke="#003459" stroke-width="2" fill="none" stroke-linecap="square" stroke-dasharray="2 8"/>
+  </g>
+
+  <!-- Bottom triangle cluster -->
+  <g transform="translate(360,420)">
+    <polygon points="0,40 40,40 20,0" fill="#003459"/>
+    <polygon points="60,40 100,40 80,0" fill="#00171F"/>
+    <polygon points="120,40 160,40 140,0" fill="#003459" fill-opacity="0.4"/>
+  </g>
+
+  <!-- Subtle dot field accent -->
+  <rect x="200" y="60" width="120" height="60" fill="url(#dots-deep)"/>
+</svg>
